@@ -15,3 +15,26 @@
 
 ## IDE recomendada ##
 [Pycharm](https://www.jetbrains.com/pycharm/)
+
+## Configuração ##
+Só é necessário configurar os caminhos para a base de treino e teste. No arquivo `main.py`, configure as variáveis `train_database_path` e `test_database_path`.
+
+## Formato esperado da base ##
+Cada amostra deve estar agrupada em pastas, que serão as classes. Ou seja, cada pessoa é uma pasta e dentro dela estão todas as imagens do indivíduo. Ambas bases de treino e teste devem seguir esse formato.
+
+```
+.
+|-- person1
+|   |-- 1.jpg
+|   |-- 2.jpg
+|   |-- 3.jpg
+|   |-- 4.jpg
+|-- person2
+|   |-- 1.jpg
+|   |-- 2.jpg
+|   |-- 3.jpg
+|   |-- 4.jpg
+```
+
+## Execução ##
+Apenas execute o arquivo `main.py`.
