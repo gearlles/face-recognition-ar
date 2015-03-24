@@ -1,5 +1,5 @@
 # face-recognition-ar
-Projeto desenvolvido para a disciplina de Visão Computacional da Universidade de Pernambuco. O objetivo é realizar o reconhecimento de faces utilizando a [base AR](http://www2.ece.ohio-state.edu/~aleix/ARdatabase.html).
+Projeto desenvolvido para a disciplina de Visão Computacional da Universidade de Pernambuco. O objetivo é realizar o reconhecimento de faces e verificar a taxa de classificação utilizando a [base AR](http://www2.ece.ohio-state.edu/~aleix/ARdatabase.html).
 
 ## Requisitos ##
 * Python 2.7
