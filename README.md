@@ -39,3 +39,8 @@ Cada amostra deve estar agrupada em pastas, que serão as classes. Ou seja, cada
 
 ## Execução ##
 Apenas execute o arquivo `main.py`.
+
+## Links úteis ##
+
+* http://bytefish.de/pdf/facerec_python.pdf
+* http://www.bytefish.de/blog/fisherfaces/
