@@ -16,6 +16,9 @@ from PIL import Image
 import matplotlib.cm as cm
 import logging
 
+train_database_path = "D:\\Program Files\\EBLearn\\ar\\train"
+test_database_path = "D:\\Program Files\\EBLearn\\ar\\test"
+
 
 def read_images(path, sz=None):
     """Reads the images in a given folder, resizes images on the fly if size is given.
@@ -62,7 +65,7 @@ if __name__ == "__main__":
     # your image data:
 
     # Now read in the image data. This must be a valid path!
-    [X, y] = read_images("D:\\Program Files\\EBLearn\\ar\\train")
+    [X, y] = read_images(train_database_path)
     # Then set up a handler for logging:
     handler = logging.StreamHandler(sys.stdout)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -94,7 +97,7 @@ if __name__ == "__main__":
     # And print the result:
     #print cv
 
-    [images_test, labels_test] = read_images("D:\\Program Files\\EBLearn\\ar\\test")
+    [images_test, labels_test] = read_images(test_database_path)
     i = 0
     rate = 0
     for im_test in images_test:
