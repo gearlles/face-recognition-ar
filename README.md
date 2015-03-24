@@ -6,6 +6,7 @@
 * [NumPy](http://www.numpy.org/)
 * [SciPy](http://sourceforge.net/projects/scipy/files/latest/download?source=files)
 * [matplotlib](http://matplotlib.org/)
+* [facerec](https://github.com/bytefish/facerec) - [instruções de instalação](http://bytefish.de/dev/facerec/install/index.html)
 
 ## Instalação (Windows) ##
 1. Certifique-se que sua instalação do Python está correta. Digite "python" e "pip" na linha de comando. Caso dê algum erro, adicione `C:\Python27` e `C:\Python27\Script` na variável de ambiente `PATH`. 
