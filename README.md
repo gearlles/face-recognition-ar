@@ -19,7 +19,7 @@ Projeto desenvolvido para a disciplina de Visão Computacional da Universidade d
 [Pycharm](https://www.jetbrains.com/pycharm/)
 
 ## Configuração ##
-Só é necessário configurar os caminhos para a base de treino e teste. No arquivo `main.py`, configure a variável `database_path .
+Só é necessário configurar os caminhos para a base de treino e teste. No arquivo `main.py`, configure a variável `database_path`.
 
 ## Formato esperado da base ##
 É utilizada a AR database. Então, o formato da base deve seguir o mesmo formato da AR.
