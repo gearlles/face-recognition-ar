@@ -11,7 +11,7 @@ Projeto desenvolvido para a disciplina de Visão Computacional da Universidade d
 
 ## Instalação (Windows) ##
 1. Certifique-se que sua instalação do Python está correta. Digite "python" e "pip" na linha de comando. Caso dê algum erro, adicione `C:\Python27` e `C:\Python27\Script` na variável de ambiente `PATH`. 
-2. Baixe e instale o SciPy.
+2. Baixe e instale as dependências.
 3. Abra a linha de comando e navegue até a página raiz do projeto (onde você deu checkout).
 4. Execute `pip setup.py install`.
 
@@ -19,23 +19,21 @@ Projeto desenvolvido para a disciplina de Visão Computacional da Universidade d
 [Pycharm](https://www.jetbrains.com/pycharm/)
 
 ## Configuração ##
-Só é necessário configurar os caminhos para a base de treino e teste. No arquivo `main.py`, configure as variáveis `train_database_path` e `test_database_path`.
+Só é necessário configurar os caminhos para a base de treino e teste. No arquivo `main.py`, configure a variável `database_path .
 
 ## Formato esperado da base ##
-Cada amostra deve estar agrupada em pastas, que serão as classes. Ou seja, cada pessoa é uma pasta e dentro dela estão todas as imagens do indivíduo. Ambas bases de treino e teste devem seguir esse formato.
+É utilizada a AR database. Então, o formato da base deve seguir o mesmo formato da AR.
 
 ```
 .
-|-- person1
-|   |-- 1.jpg
-|   |-- 2.jpg
-|   |-- 3.jpg
-|   |-- 4.jpg
-|-- person2
-|   |-- 1.jpg
-|   |-- 2.jpg
-|   |-- 3.jpg
-|   |-- 4.jpg
+|-- M-001-01.bmp
+|-- M-001-02.bmp
+|-- M-001-03.bmp
+|-- M-001-04.bmp
+|-- M-001-05.bmp
+|-- M-001-06.bmp
+|-- ...
+|-- W-050-26.bmp
 ```
 
 ## Execução ##
