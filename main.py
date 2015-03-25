@@ -1,71 +1,72 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import sys
 import os
 
 sys.path.append("../..")
-# import facerec modules
+
 from facerec.feature import Fisherfaces
 from facerec.distance import *
 from facerec.classifier import NearestNeighbor
 from facerec.model import PredictableModel
-from facerec.validation import KFoldCrossValidation
 from facerec.visual import subplot
 from facerec.util import minmax_normalize
-# import numpy, matplotlib and logging
-import numpy as np
 from PIL import Image
+import re
+import numpy as np
 import matplotlib.cm as cm
 import logging
 
-train_database_path = "D:\\Program Files\\EBLearn\\ar\\train"
-test_database_path = "D:\\Program Files\\EBLearn\\ar\\test"
+database_path = "D:\\Program Files\\EBLearn\\ar\\test2"
 
 
-def read_images(path, sz=None):
-    """Reads the images in a given folder, resizes images on the fly if size is given.
-
-    Args:
-        path: Path to a folder with subfolders representing the subjects (persons).
-        sz: A tuple with the size Resizes 
-
-    Returns:
-        A list [X,y]
-
-            X: The images, which is a Python list of numpy arrays.
-            y: The corresponding labels (the unique number of the subject, person) in a Python list.
-    """
+def read_images(path, crop_offset=None, resize_rate=None, is_train=True):
     c = 0
+    last_person = 'M001'
     X, y = [], []
     for dirname, dirnames, filenames in os.walk(path):
-        for subdirname in dirnames:
-            subject_path = os.path.join(dirname, subdirname)
-            for filename in os.listdir(subject_path):
+        # filtrar arquivos que não são imagens
+        filenames = [fi for fi in filenames if fi.endswith(".bmp")]
+        for filename in filenames:
+            # filtrar imagens de treino e teste
+            p = re.search('(W|M)-([0-9]+)-([0-9]+).bmp', filename)
+            sex = p.group(1)
+            person_identifier = p.group(2)
+            feature_identifier = int(p.group(3))
+            person = sex + person_identifier
+            if person != last_person:
+                c += 1
+                last_person = person
+            if (feature_identifier <= 7 and is_train) or (14 <= feature_identifier <= 20 and not is_train):
+                fill_file_name = os.path.join(dirname, filename)
                 try:
-                    im = Image.open(os.path.join(subject_path, filename))
-                    im = im.convert("L")
-                    # resize to given size (if given)
-                    if sz is not None:
-                        im = im.resize(sz, Image.ANTIALIAS)
-                    X.append(np.asarray(im, dtype=np.uint8))
-                    y.append(c)
+                        im = Image.open(fill_file_name)
+                        im = im.convert("L")
+                        # resize to given size (if given)
+                        if resize_rate is not None:
+                            im = im.resize(resize_rate, Image.ANTIALIAS)
+                        if crop_offset is not None:
+                            width, height = im.size   # Get dimensions
+                            left = crop_offset
+                            top = crop_offset
+                            right = width - crop_offset
+                            bottom = height - crop_offset
+                            im = im.crop((left, top, right, bottom))
+
+                        X.append(np.asarray(im, dtype=np.uint8))
+                        y.append(c)
                 except IOError, (errno, strerror):
                     print "I/O error({0}): {1}".format(errno, strerror)
                 except:
                     print "Unexpected error:", sys.exc_info()[0]
                     raise
-            c += 1
     return [X, y]
 
 
 if __name__ == "__main__":
-    # This is where we write the images, if an output_dir is given
-    # in command line:
-    out_dir = None
-    # You'll need at least a path to your image data, please see
-    # the tutorial coming with this source code on how to prepare
-    # your image data:
-
     # Now read in the image data. This must be a valid path!
-    [X, y] = read_images(train_database_path)
+    [X, y] = read_images(database_path)
     # Then set up a handler for logging:
     handler = logging.StreamHandler(sys.stdout)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -74,35 +75,34 @@ if __name__ == "__main__":
     logger = logging.getLogger("facerec")
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
+
     # Define the Fisherfaces as Feature Extraction method:
     feature = Fisherfaces()
-    # Define a 1-NN classifier with Euclidean Distance:
-    classifier = NearestNeighbor(dist_metric=CosineDistance(), k=3)
+    # Define a k-NN classifier
+    classifier = NearestNeighbor(dist_metric=CosineDistance(), k=5)
     # Define the model as the combination
     model = PredictableModel(feature=feature, classifier=classifier)
     # Compute the Fisherfaces on the given data (in X) and labels (in y):
     model.compute(X, y)
+
     # Then turn the first (at most) 16 eigenvectors into grayscale
     # images (note: eigenvectors are stored by column!)
     E = []
     for i in xrange(min(model.feature.eigenvectors.shape[1], 16)):
         e = model.feature.eigenvectors[:, i].reshape(X[0].shape)
         E.append(minmax_normalize(e, 0, 255, dtype=np.uint8))
-    # Plot them and store the plot to "python_fisherfaces_fisherfaces.pdf"
+    # Plot them and store the plot to "fisherfaces.png"
     subplot(title="Fisherfaces", images=E, rows=4, cols=4, sptitle="Fisherface", colormap=cm.jet,
             filename="fisherfaces.png")
-    # Perform a 10-fold cross validation
-    # cv = KFoldCrossValidation(model, k=10)
-    #cv.validate(X, y)
-    # And print the result:
-    #print cv
 
-    [images_test, labels_test] = read_images(test_database_path)
+    [images_test, labels_test] = read_images(database_path, None, None, False)
     i = 0
     rate = 0
     for im_test in images_test:
         prediction = model.predict(im_test)
-        if prediction[0] == int(labels_test[i]):
+        if prediction[0] == labels_test[i]:
             rate += 1
         i += 1
-    print rate * 100.0 / i
+    classification_rate = rate * 100.0 / i
+    error = 100 - classification_rate
+    print "Classification rate (%): ", classification_rate
