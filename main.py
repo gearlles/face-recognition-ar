@@ -18,7 +18,7 @@ import numpy as np
 import matplotlib.cm as cm
 import logging
 
-database_path = "D:\\Program Files\\EBLearn\\ar\\test2"
+database_path = "D:\\Dataset\\face\\AR"
 
 
 def read_images(path, crop_offset=None, resize_rate=None, is_train=True):
@@ -76,6 +76,7 @@ if __name__ == "__main__":
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
 
+    logger.debug("Iniciando treinamento.")
     # Define the Fisherfaces as Feature Extraction method:
     feature = Fisherfaces()
     # Define a k-NN classifier
@@ -84,6 +85,8 @@ if __name__ == "__main__":
     model = PredictableModel(feature=feature, classifier=classifier)
     # Compute the Fisherfaces on the given data (in X) and labels (in y):
     model.compute(X, y)
+
+    logger.debug(model)
 
     # Then turn the first (at most) 16 eigenvectors into grayscale
     # images (note: eigenvectors are stored by column!)
@@ -95,6 +98,7 @@ if __name__ == "__main__":
     subplot(title="Fisherfaces", images=E, rows=4, cols=4, sptitle="Fisherface", colormap=cm.jet,
             filename="fisherfaces.png")
 
+    logger.debug("Iniciando teste.")
     [images_test, labels_test] = read_images(database_path, None, None, False)
     i = 0
     rate = 0
@@ -105,4 +109,4 @@ if __name__ == "__main__":
         i += 1
     classification_rate = rate * 100.0 / i
     error = 100 - classification_rate
-    print "Classification rate (%): ", classification_rate
+    logger.debug("Classification rate: %f%%", classification_rate)
